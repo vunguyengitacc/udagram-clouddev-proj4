@@ -1,8 +1,18 @@
+import { deleteTodo } from "../../dataAccess/toDoDAO.mjs"
+import { getUserId } from "../auth/authUtils.mjs";
 
-export function handler(event) {
+export async function handler(event) {
+  const userId = getUserId(event);
   const todoId = event.pathParameters.todoId
+  await deleteTodo(userId, todoId)
 
-  // TODO: Remove a TODO item by id
-  return undefined
+  return {
+    statusCode: 202,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true
+    },
+    body: JSON.stringify({})
+  }
 }
 

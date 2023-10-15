@@ -15,11 +15,12 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { useNavigate } from 'react-router-dom'
 import { deleteTodo, getTodos, patchTodo } from '../api/todos-api'
 import { NewTodoInput } from './NewTodoInput'
+import { RenderItem } from './RenderItem'
 
 export function Todos() {
   function renderTodos() {
     if (loadingTodos) {
-      return renderLoading()
+      return <RenderItem />
     }
 
     return renderTodosList()
@@ -31,13 +32,20 @@ export function Todos() {
         {todos.map((todo, pos) => {
           return (
             <Grid.Row key={todo.todoId}>
-              <Grid.Column width={1} verticalAlign="middle">
+              <Grid.Column width={2} verticalAlign="middle">
                 <Checkbox
                   onChange={() => onTodoCheck(pos)}
                   checked={todo.done}
+                  label={todo.done ? 'Done' : 'In Progress'}
+                  style={{
+                    color: "Blue"
+                  }}
                 />
               </Grid.Column>
-              <Grid.Column width={10} verticalAlign="middle">
+              <Grid.Column width={1} >
+                <Divider />
+              </Grid.Column>
+              <Grid.Column width={8} verticalAlign="middle">
                 {todo.name}
               </Grid.Column>
               <Grid.Column width={3} floated="right">
@@ -77,7 +85,7 @@ export function Todos() {
   async function onTodoDelete(todoId) {
     try {
       const accessToken = await getAccessTokenSilently({
-        audience: `https://test-endpoint.auth0.com/api/v2/`,
+        audience: `https://${process.env.REACT_APP_AUTH0_DOMAIN}/api/v2/`,
         scope: 'delete:todo'
       })
       await deleteTodo(accessToken, todoId)
@@ -91,7 +99,7 @@ export function Todos() {
     try {
       const todo = todos[pos]
       const accessToken = await getAccessTokenSilently({
-        audience: `https://test-endpoint.auth0.com/api/v2/`,
+        audience: `https://${process.env.REACT_APP_AUTH0_DOMAIN}/api/v2/`,
         scope: 'write:todo'
       })
       await patchTodo(accessToken, todo.todoId, {
@@ -128,7 +136,7 @@ export function Todos() {
     async function foo() {
       try {
         const accessToken = await getAccessTokenSilently({
-          audience: `https://test-endpoint.auth0.com/api/v2/`,
+          audience: `https://${process.env.REACT_APP_AUTH0_DOMAIN}/api/v2/`,
           scope: 'read:todos'
         })
         console.log('Access token: ' + accessToken)
@@ -136,6 +144,7 @@ export function Todos() {
         setTodos(todos)
         setLoadingTodos(false)
       } catch (e) {
+        console.log(e)
         alert(`Failed to fetch todos: ${e.message}`)
       }
     }

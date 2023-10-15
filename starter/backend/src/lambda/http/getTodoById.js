@@ -1,10 +1,11 @@
-import { getTodos } from "../../dataAccess/toDoDAO.mjs";
+import { getTodoById } from "../../dataAccess/toDoDAO.mjs";
 import { getUserId } from "../auth/authUtils.mjs";
 
 export async function handler(event) {
   const userId = getUserId(event);
+  const todoId = event.pathParameters.todoId
 
-  const todos = await getTodos(userId);
+  const todo = await getTodoById(userId,todoId);
   return {
     statusCode: 200,
     headers: {
@@ -12,7 +13,7 @@ export async function handler(event) {
       'Access-Control-Allow-Credentials': true
     },
     body: JSON.stringify({
-      items: todos
+      ...todo
     })
   }
 }

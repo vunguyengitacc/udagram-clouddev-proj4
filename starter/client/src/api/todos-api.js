@@ -16,6 +16,22 @@ export async function getTodos(idToken) {
   return response.data.items
 }
 
+export async function getTodoById(idToken, todoId) {
+  console.log('Fetching todos')
+
+  const response = await Axios.get(
+    `${process.env.REACT_APP_API_ENDPOINT}/todos/${todoId}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${idToken}`
+      }
+    }
+  )
+  console.log('Todos:', response.data)
+  return response.data
+}
+
 export async function createTodo(idToken, newTodo) {
   const response = await Axios.post(
     `${process.env.REACT_APP_API_ENDPOINT}/todos`,
@@ -31,7 +47,7 @@ export async function createTodo(idToken, newTodo) {
 }
 
 export async function patchTodo(idToken, todoId, updatedTodo) {
-  await Axios.patch(
+  await Axios.put(
     `${process.env.REACT_APP_API_ENDPOINT}/todos/${todoId}`,
     JSON.stringify(updatedTodo),
     {
