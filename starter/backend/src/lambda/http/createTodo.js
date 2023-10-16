@@ -1,4 +1,4 @@
-import { createTodo } from "../../dataAccess/toDoDAO.mjs";
+import { createTodo } from "../../businessLogic/toDoService.mjs";
 import { getUserId } from "../auth/authUtils.mjs"
 
 export async function handler(event) {

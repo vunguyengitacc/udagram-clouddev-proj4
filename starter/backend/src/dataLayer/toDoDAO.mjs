@@ -11,9 +11,7 @@ const bucketName = process.env.S3_BUCKET_NAME;
 const todoTable = "ToDoUdagram"
 const todoTableGsi = "user-id"
 
-export async function getTodos(userId) {
-  logger.info('Fetching all todos for userId', { userId: userId })
-
+export async function getTodosDB(userId) {
   const result = await docClient.query({
     TableName: todoTable,
     IndexName: todoTableGsi,
@@ -22,15 +20,12 @@ export async function getTodos(userId) {
       ':userId': userId
     }
   }).promise();
-
   const items = result.Items
-
-  logger.info("Fetching complete.", items)
 
   return items
 }
 
-export async function getTodoById(userId, todoId) {
+export async function getTodoByIdDB(userId, todoId) {
   logger.info('Fetching todo with todoId', { userId: userId })
 
   const result = await docClient.query({
@@ -45,34 +40,19 @@ export async function getTodoById(userId, todoId) {
   const items = result.Items
 
   logger.info("Fetching complete.", items)
-
-  return items[0]
+  
+  return items
 }
 
-export async function createTodo(userId, newTodo) {
-  const todoId = uuid.v4();
-
-  const newTodoWithAdditionalInfo = {
-    userId: userId,
-    todoId: todoId,
-    ...newTodo
-  }
-
-  logger.info("Creating new todo object:", newTodoWithAdditionalInfo);
-
+export async function createTodoDB(newTodo) {  
   await docClient.put({
     TableName: todoTable,
-    Item: newTodoWithAdditionalInfo
+    Item: newTodo
   }).promise();
-
-  logger.info("Create complete.")
-
-  return todoId;
-
+  return newTodo.todoId;
 }
 
-export async function deleteTodo(userId, todoId) {
-  logger.info("Deleting todo:", { todoId: todoId });
+export async function deleteTodoDB(userId, todoId) {
   await docClient.delete({
     TableName: todoTable,
     Key: {
@@ -80,15 +60,9 @@ export async function deleteTodo(userId, todoId) {
       "userId": userId
     }
   }).promise();
-  logger.info("Delete complete.", { todoId: todoId });
 }
 
-export async function updateTodo(userId, todoId, updatedTodo) {
-
-  logger.info("Updating todo:", {
-    todoId: todoId,
-    updatedTodo: updatedTodo
-  });
+export async function updateTodoDB(userId, todoId, updatedTodo) {
   await docClient.update({
     TableName: todoTable,
     Key: {
@@ -105,15 +79,9 @@ export async function updateTodo(userId, todoId, updatedTodo) {
       ":dueDate": updatedTodo.dueDate
     }
   }).promise()
-
-  logger.info("Update complete.")
-
 }
 
-export async function updateTodoAttachmentUrl(userId, todoId, attachmentUrl) {
-
-  logger.info(`Updating todoId ${todoId} with attachmentUrl ${attachmentUrl}`)
-
+export async function updateTodoAttachmentUrlDB(userId, todoId, attachmentUrl) {
   await docClient.update({
     TableName: todoTable,
     Key: {
