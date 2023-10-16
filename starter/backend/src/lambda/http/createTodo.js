@@ -1,5 +1,5 @@
 import { createTodo } from "../../businessLogic/toDoService.mjs";
-import { getUserId } from "../auth/authUtils.mjs"
+import { getUserId } from "../../businessLogic/authUtils.mjs"
 
 export async function handler(event) {
   const newTodo = JSON.parse(event.body)

@@ -2,7 +2,7 @@ service: serverless-todo-app
 
 plugins:
   - serverless-iam-roles-per-function
-
+	
 frameworkVersion: '3'
 
 provider:
@@ -68,6 +68,9 @@ functions:
           path: todos
           cors: true
           authorizer: Auth
+          request:
+            schema:
+              application/json: ${file(src/models/create-todo.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -89,6 +92,9 @@ functions:
           path: todos/{todoId}
           cors: true
           authorizer: Auth
+          request:
+            schema:
+              application/json: ${file(src/models/update-todo.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:

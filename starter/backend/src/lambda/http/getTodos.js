@@ -1,5 +1,5 @@
 import { getList } from "../../businessLogic/toDoService.mjs";
-import { getUserId } from "../auth/authUtils.mjs";
+import { getUserId } from "../../businessLogic/authUtils.mjs";
 
 export async function handler(event) {
   const userId = getUserId(event);

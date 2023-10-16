@@ -36,7 +36,7 @@ export async function createTodo(userId, newTodo) {
   }
   logger.info("Creating new todo object:", newTodoWithAdditionalInfo);
 
-  const id = await createTodoDB(userId, newTodo)
+  const id = await createTodoDB(newTodoWithAdditionalInfo)
 
   logger.info("Create complete.")
 
@@ -55,15 +55,15 @@ export async function updateTodo(userId, todoId, updatedTodo) {
     todoId: todoId,
     updatedTodo: updatedTodo
   });
-  await updateTodoDB(userId, todoId, updateTodo)
+  await updateTodoDB(userId, todoId, updatedTodo)
   logger.info("Update completed.")
 }
 
 export async function updateTodoAttachmentUrl(userId, todoId) {
-  logger.info(`Updating todoId ${todoId} with attachmentUrl ${attachmentUrl}`)
-  const attachmentUrl = uploadFile()
-  await updateTodoAttachmentUrlDB(userId, todoId, attachmentUrl)
+  const {attachmentId, uploadUrl} = await uploadFile()  
+  logger.info(`Updating todoId ${todoId} with attachmentUrl ${uploadUrl}`)
+  await updateTodoAttachmentUrlDB(userId, todoId, attachmentId)
   logger.info("Update completed.")
-  return attachmentUrl
+  return uploadUrl
 }
 

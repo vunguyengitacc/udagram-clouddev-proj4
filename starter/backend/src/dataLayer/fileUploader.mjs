@@ -15,5 +15,5 @@ export async function uploadFile() {
     Expires: urlExpiration
   })
   
-  return uploadUrl
+  return {uploadUrl, attachmentId}
 }
