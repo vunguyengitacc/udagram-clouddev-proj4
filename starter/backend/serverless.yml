@@ -74,7 +74,7 @@ functions:
           request:
             schemas:
               application/json:
-                schema: ${file(src/models/create-todo.json)}
+                schema: ${file(src/models/todo.json)}
                 name: PostCreateModel
                 description: 'Validation model for Creating Posts'
     iamRoleStatements:
@@ -102,7 +102,7 @@ functions:
           request:
             schemas:
               application/json:
-                schema: ${file(src/models/update-todo.json)}
+                schema: ${file(src/models/todo.json)}
                 name: PutCreateModel
                 description: 'Validation model for Update Posts'
     iamRoleStatements:
