@@ -2,9 +2,6 @@ service: serverless-todo-app
 
 plugins:
   - serverless-iam-roles-per-function
-  - serverless-reqvalidator-plugin
-  - serverless-aws-documentation
-
 	
 frameworkVersion: '3'
 
@@ -68,12 +65,15 @@ functions:
     events:
       - http:
           method: post
-          path: todos
+          path: todos  
           cors: true
           authorizer: Auth
           request:
-            schema:
-              application/json: ${file(src/models/create-todo.json)}
+            schemas:
+              application/json:
+                schema: ${file(src/models/create-todo.json)}
+                name: PostCreateModel
+                description: 'Validation model for Creating Posts'
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -96,8 +96,11 @@ functions:
           cors: true
           authorizer: Auth
           request:
-            schema:
-              application/json: ${file(src/models/update-todo.json)}
+            schemas:
+              application/json:
+                schema: ${file(src/models/update-todo.json)}
+                name: PutCreateModel
+                description: 'Validation model for Updating Posts'
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -159,14 +162,6 @@ functions:
 
 resources:
   Resources:
-    xMyRequestValidator:  
-      Type: "AWS::ApiGateway::RequestValidator"
-      Properties:
-        Name: 'my-req-validator'
-        RestApiId: 
-          Ref: ApiGatewayRestApi
-        ValidateRequestBody: true
-        ValidateRequestParameters: false  
 
     GatewayResponseDefault4XX:
       Type: AWS::ApiGateway::GatewayResponse
