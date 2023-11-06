@@ -2,6 +2,9 @@ service: serverless-todo-app
 
 plugins:
   - serverless-iam-roles-per-function
+  - serverless-reqvalidator-plugin
+  - serverless-aws-documentation
+
 	
 frameworkVersion: '3'
 
@@ -156,6 +159,14 @@ functions:
 
 resources:
   Resources:
+    xMyRequestValidator:  
+      Type: "AWS::ApiGateway::RequestValidator"
+      Properties:
+        Name: 'my-req-validator'
+        RestApiId: 
+          Ref: ApiGatewayRestApi
+        ValidateRequestBody: true
+        ValidateRequestParameters: false  
 
     GatewayResponseDefault4XX:
       Type: AWS::ApiGateway::GatewayResponse
